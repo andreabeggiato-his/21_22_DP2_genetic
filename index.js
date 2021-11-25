@@ -2,6 +2,8 @@
 const {
   generateRandomSolution,
   calculateFitness,
+  getRandomNumber,
+  mutate,
 } = require('./utils');
 
 const distanceArray = [
@@ -19,6 +21,7 @@ const cities = ['X', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
 const populationSize = 5;
 const population = [];
+const mutationRate = 0.30;
 
 // initialize
 for (let i = 0; i < populationSize; i = i + 1) {
@@ -32,8 +35,18 @@ while (true) {
   // Select
   const best = population.slice(0, Math.floor(populationSize / 2));
   const worst = population.slice(best.length, population.length);
+
+  // Mutation
+  if (Math.random() <= mutationRate) {
+    const min = 0;
+    const max = worst.length - 1;
+    const randomIndexWorst = getRandomNumber(min, max);
+    mutate(worst[randomIndexWorst]);
+  }
+
+  // Crossover
 }
-let finalSolution = 
+
 let finalSolutionFitness = calculateFitness(finalSolution, distanceArray);
 
 console.log(finalSolution);
