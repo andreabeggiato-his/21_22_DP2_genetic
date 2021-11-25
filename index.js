@@ -23,13 +23,13 @@ const populationSize = 5;
 const population = [];
 const mutationRate = 0.30;
 
-// initialize
+// Initialize
 for (let i = 0; i < populationSize; i = i + 1) {
   population.push(generateRandomSolution(cities));
 }
 
 while (true) {
-  // evaluate
+  // Evaluate
   population.sort((a, b) => calculateFitness(a, distanceArray) > calculateFitness(b, distanceArray) ? 1 : -1);
 
   // Select
