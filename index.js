@@ -4,6 +4,9 @@ const {
   calculateFitness,
   getRandomNumber,
   mutate,
+  pmx,
+
+  truncate,
 } = require('./utils');
 
 const distanceArray = [
@@ -20,21 +23,34 @@ const distanceArray = [
 const cities = ['X', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
 const populationSize = 5;
-const population = [];
+let population = [];
 const mutationRate = 0.30;
+
 
 // Initialize
 for (let i = 0; i < populationSize; i = i + 1) {
   population.push(generateRandomSolution(cities));
 }
 
-while (true) {
+let sameTopCount = 0;
+let topFitness = calculateFitness(population[0], distanceArray);
+
+while (sameTopCount < 10000) {
   // Evaluate
   population.sort((a, b) => calculateFitness(a, distanceArray) > calculateFitness(b, distanceArray) ? 1 : -1);
 
   // Select
   const best = population.slice(0, Math.floor(populationSize / 2));
   const worst = population.slice(best.length, population.length);
+
+  const currentTopFitness = calculateFitness(best[0], distanceArray);
+  if (currentTopFitness > topFitness) {
+    topFitness = currentTopFitness;
+    sameTopCount = 0;
+  }
+  else {
+    sameTopCount += 1;
+  }
 
   // Mutation
   if (Math.random() <= mutationRate) {
@@ -45,25 +61,15 @@ while (true) {
   }
 
   // Crossover
+  const newBorn = pmx(best);
+  population = [...best, ...worst, newBorn];
 }
 
-let finalSolutionFitness = calculateFitness(finalSolution, distanceArray);
-
-console.log(finalSolution);
-
-while (true) {
-  const currentSolution = generateRandomSolution(cities);
-  const currentSolutionFitness = calculateFitness(currentSolution, distanceArray);
-  if (currentSolutionFitness > finalSolutionFitness) {
-    finalSolution = currentSolution;
-    console.log(finalSolution);
-    finalSolutionFitness = currentSolutionFitness;
-  }
+console.log('Better solution');
+const solution = [];
+for (let i = 0; i < population[0].length; i += 1) {
+  solution.push(cities[population[0][i]]);
 }
 
+console.log(solution.join(' '), `${(1 / topFitness).toFixed(0)}km`);
 
-
-const solutionFitness = calculateFitness(solution, distanceArray);
-
-console.log(solution);
-console.log(solutionFitness);
