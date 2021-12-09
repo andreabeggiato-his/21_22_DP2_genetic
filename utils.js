@@ -103,7 +103,6 @@ function pmx(population) {
   return child;
 }
 
-
 // function ox(population) {
 //   const parent1Index = getRandomNumber(0, population.length - 1);
 //   let parent2Index = getRandomNumber(0, population.length - 1);
